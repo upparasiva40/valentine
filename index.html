@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Always Us ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, #ff758c, #ff7eb3);
+        height: 100vh;
+        overflow: hidden;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popup {
+        background: #fff;
+        color: #333;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        width: 320px;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    h2 span { color: #ff4d6d; }
+
+    button {
+        padding: 12px 25px;
+        font-size: 16px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        margin: 10px;
+    }
+
+    #yesBtn { 
+        background: #ff4d6d; 
+        color: #fff; 
+        border: none;
+        position: relative;
+        margin-right: 60%;
+    }
+    
+    #noBtn { 
+        background: #ccc; 
+        position: absolute;
+        border: none;
+    }
+
+    .mobile-only {
+        display: none;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #ff4d6d;
+    }
+
+    @media (max-width: 768px) { 
+        .mobile-only { display: block; } 
+        .popup {
+            width: 90%;
+            margin: 20px;
+        }
+    }
+
+    /* Heart styles */
+    .heart {
+        position: fixed;
+        top: -10px;
+        font-size: 20px;
+        animation: fall linear forwards;
+        z-index: 9999;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    @keyframes fall { 
+        to { 
+            transform: translateY(110vh) rotate(360deg); 
+            opacity: 0;
+        } 
+    }
+    
+    .success-screen {
+        display: none;
+        text-align: center;
+        padding: 40px;
+        width: 100%;
+        height: 100vh;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        z-index: 10;
+        position: relative;
+    }
+    
+    .success-screen h1 {
+        font-size: 3em;
+        margin-bottom: 20px;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    
+    .loading {
+        display: none;
+        color: #ff4d6d;
+        margin-top: 15px;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- Main Popup -->
+<div class="popup" id="mainPopup">
+    <h2>Hey <span>Heart's integral</span> 💘💕</h2>
+    <p>Will u be my Valentine? ❤️</p>
+
+    <button id="yesBtn">YES 😍</button>
+    <button id="noBtn">NO 😉</button>
+    
+    <div class="loading" id="loading">Sending love... 💌</div>
+
+    <div class="mobile-only">📱 Best viewed on phone 😉</div>
+</div>
+
+<!-- Success Screen (initially hidden) -->
+<div class="success-screen" id="successScreen">
+    <h1>Yaaayyy 😍❤️</h1>
+    <p>You just made my heart smile 💖</p>
+    <p style="margin-top: 20px; font-size: 0.9em; color: rgba(255,255,255,0.8);">
+        Your love has reached to Yerri 💌 😘
+    </p>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const popup = document.getElementById("mainPopup");
+    const successScreen = document.getElementById("successScreen");
+    const loading = document.getElementById("loading");
+    
+    // Initialize button positions
+    noBtn.style.position = "absolute";
+    noBtn.style.left = "50%";
+    noBtn.style.transform = "translateX(40%)";
+    
+    // Make NO button move
+    noBtn.addEventListener("mouseenter", function() {
+        const maxX = popup.clientWidth - noBtn.offsetWidth - 20;
+        const maxY = popup.clientHeight - noBtn.offsetHeight - 20;
+        const randomX = Math.random() * maxX;
+        const randomY = Math.random() * maxY;
+        
+        noBtn.style.left = randomX + "px";
+        noBtn.style.top = randomY + "px";
+        noBtn.style.transform = "none";
+    });
+    
+    // YES button click
+    yesBtn.addEventListener("click", function() {
+        
+        // Show loading
+        yesBtn.disabled = true;
+        yesBtn.innerHTML = "Sending...";
+        loading.style.display = "block";
+        
+        // Try to send email
+        try {
+            const script = document.createElement('script');
+            script.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
+            script.onload = function() {
+                
+                emailjs.init("EJAqOX-uvSbAgw8DU");
+                
+                emailjs.send("service_a8y6rbg", "template_qzeac8q", {
+                    to_name: "Yerri",
+                    from_name: "Meena",
+                    message: "Meena clicked YES on your proposal! 💖❤️🎉",
+                    date: new Date().toLocaleString()
+                })
+                .then(function(response) {
+                    console.log("✅ Email sent");
+                })
+                .catch(function(error) {
+                    console.log("⚠️ Email failed");
+                })
+                .finally(function() {
+                    showSuccess();
+                });
+            };
+            
+            script.onerror = function() {
+                showSuccess();
+            };
+            
+            document.head.appendChild(script);
+            
+        } catch (error) {
+            showSuccess();
+        }
+    });
+    
+    function showSuccess() {
+        
+        // Hide popup, show success
+        popup.style.display = "none";
+        successScreen.style.display = "flex";
+        
+        // Start continuous hearts AUTOMATICALLY
+        startContinuousHearts();
+    }
+    
+    // GLOBAL VARIABLE to control hearts
+    let heartInterval;
+    
+    function startContinuousHearts() {
+        const loveEmojis = [
+            '💘', '💝', '💖', '💗', '💓', '💞', '💕', '💟', '❣️'
+        ];        
+        
+        // Create initial burst of hearts
+        for(let i = 0; i < 15; i++) {
+            setTimeout(() => {
+                createSingleHeart(loveEmojis);
+            }, i * 100);
+        }
+        
+        // Start continuous creation every 300ms - INFINITE LOOP
+        heartInterval = setInterval(() => {
+            createSingleHeart(loveEmojis);
+        }, 300);
+    }
+    
+    function createSingleHeart(emojis) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.fontSize = (Math.random() * 25 + 25) + 'px';
+        heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        heart.style.animationDelay = (Math.random() * 0.5) + 's';
+        
+        document.body.appendChild(heart);
+        
+        // Remove after animation completes
+        const duration = parseFloat(heart.style.animationDuration) * 1000;
+        const delay = parseFloat(heart.style.animationDelay) * 1000;
+        
+        setTimeout(() => {
+            if (heart.parentNode) {
+                heart.remove();
+            }
+        }, duration + delay + 500);
+    }
+  
+});
+</script>
+</body>
+</html>
+
+
